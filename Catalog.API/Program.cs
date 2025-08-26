@@ -19,6 +19,8 @@ builder.Services.AddDbContext<CatalogDbContext>(options =>
 
 // Services
 builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 
 // JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -46,15 +48,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
-                  .AllowAnyMethod()
-                  .AllowAnyHeader()
-                  .AllowCredentials();
-        });
+    options.AddPolicy("AllowAll", policy =>
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 });
+
 
 var app = builder.Build();
 
@@ -66,7 +63,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowReactApp");
+app.UseCors("AllowAll");
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
