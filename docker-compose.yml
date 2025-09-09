@@ -1,0 +1,82 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ecommerce-sqlserver
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: YourStrong!Passw0rd
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - ecommerce-net
+
+  redis:
+    image: redis:alpine
+    container_name: ecommerce-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  catalog-api:
+    build:
+      context: .                 
+      dockerfile: src/Catalog.API/Dockerfile
+    container_name: catalog-api
+    ports:
+      - "5001:5001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ECommerceCatalog;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=true
+    depends_on:
+      - sqlserver
+    networks:
+      - ecommerce-net
+    
+  identity-api:
+    build:
+      context: .
+      dockerfile: src/Identity.API/Dockerfile
+    container_name: identity-api
+    ports:
+      - "5002:5002"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ECommerceIdentity;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=true
+    depends_on:
+      - sqlserver
+
+  basket-api:
+    build:
+      context: ./src
+      dockerfile: Basket.API/Dockerfile
+    container_name: basket-api
+    ports:
+      - "5003:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Redis=redis:6379
+    depends_on:
+      - redis
+
+  web-app:
+    build:
+      context: ../ecommerce-web-app/ecommerce-web-app 
+      dockerfile: Dockerfile
+    container_name: ecommerce-web-app
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5001/api
+    networks:
+      - ecommerce-net
+
+networks:
+  ecommerce-net:
+    driver: bridge
+
+volumes:
+  sqlserver_data:
+  redis_data:
