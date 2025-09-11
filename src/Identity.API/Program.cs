@@ -16,7 +16,7 @@ builder.Services.AddSwaggerGen();
 
 // Register IdentityDbContext with SQL Server
 builder.Services.AddDbContext<IdentityDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register authentication/authorization if needed
 builder.Services.AddAuthentication(); // Configure options as needed

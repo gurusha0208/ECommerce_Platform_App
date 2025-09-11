@@ -26,4 +26,4 @@ COPY wait-for-it.sh ./
 RUN chmod +x wait-for-it.sh
 
 # Use wait-for-it to wait for SQL before starting
-ENTRYPOINT ["./wait-for-it.sh", "sqlserver:1433", "--", "dotnet", "Identity.API.dll"]
+ENTRYPOINT ["./wait-for-it.sh", "postgres:5432", "--", "dotnet", "Identity.API.dll"]
