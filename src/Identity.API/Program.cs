@@ -16,7 +16,7 @@ builder.Services.AddSwaggerGen();
 
 // Register IdentityDbContext with SQL Server
 builder.Services.AddDbContext<IdentityDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register authentication/authorization if needed
 builder.Services.AddAuthentication(); // Configure options as needed
@@ -60,6 +60,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Ensure database is created
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
+    context.Database.EnsureCreated();
+}
 
 app.Run();
 

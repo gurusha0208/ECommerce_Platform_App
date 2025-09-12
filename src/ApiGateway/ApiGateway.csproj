@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.5" />
+    <PackageReference Include="MMLib.SwaggerForOcelot" Version="3.2.0" />
     <PackageReference Include="Ocelot" Version="24.0.1" />
   </ItemGroup>
 

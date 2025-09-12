@@ -1,14 +1,15 @@
 services:
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: ecommerce-sqlserver
+  postgres:
+    image: postgres:15-alpine
+    container_name: ecommerce-postgres
     environment:
-      ACCEPT_EULA: Y
-      MSSQL_SA_PASSWORD: YourStrong!Passw0rd
+      POSTGRES_USER: ecommerce_sqlserver_user
+      POSTGRES_PASSWORD: C9smJ6lUL0qUpP6tLKsOag6d1RjZcoOC
+      POSTGRES_DB: ECommerceCatalog   # initial database
     ports:
-      - "1433:1433"
+      - "5432:5432"
     volumes:
-      - sqlserver_data:/var/opt/mssql
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - ecommerce-net
 
@@ -19,6 +20,24 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+  api-gateway:
+    build:
+      context: .   # folder where your gateway code lives
+      dockerfile: src/ApiGateway/Dockerfile     # yes, you need a Dockerfile for it
+    container_name: api-gateway
+    ports:
+      - "5100:5100"              # public entry port
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - CATALOG_API_URL=http://catalog-api:5001
+      - IDENTITY_API_URL=http://identity-api:5002
+      - BASKET_API_URL=http://basket-api:5003
+    depends_on:
+      - catalog-api
+      - identity-api
+      - basket-api
+    networks:
+      - ecommerce-net
 
   catalog-api:
     build:
@@ -29,9 +48,9 @@ services:
       - "5001:5001"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ECommerceCatalog;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=true
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=ECommerceCatalog;Username=ecommerce_sqlserver_user;Password=C9smJ6lUL0qUpP6tLKsOag6d1RjZcoOC
     depends_on:
-      - sqlserver
+      - postgres
     networks:
       - ecommerce-net
     
@@ -44,9 +63,11 @@ services:
       - "5002:5002"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=ECommerceIdentity;User Id=sa;Password=YourStrong!Passw0rd;TrustServerCertificate=true
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=ECommerceCatalog;Username=ecommerce_sqlserver_user;Password=C9smJ6lUL0qUpP6tLKsOag6d1RjZcoOC
     depends_on:
-      - sqlserver
+      - postgres
+    networks:
+      - ecommerce-net
 
   basket-api:
     build:
@@ -78,5 +99,5 @@ networks:
     driver: bridge
 
 volumes:
-  sqlserver_data:
+  postgres_data:
   redis_data:

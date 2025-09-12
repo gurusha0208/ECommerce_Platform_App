@@ -1,20 +1,31 @@
 # Build stage
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Copy solution and project files
-COPY *.sln .
-COPY ./ApiGateway/ApiGateway.csproj ./ApiGateway/
-RUN dotnet restore ApiGateway/ApiGateway.csproj
+# Copy ApiGateway and Common project files
+COPY src/ApiGateway/ApiGateway.csproj src/ApiGateway/
 
-# Copy everything and build
+
+# Restore dependencies
+RUN dotnet restore src/ApiGateway/ApiGateway.csproj
+
+# Copy all source code
 COPY . .
-WORKDIR /src/ApiGateway
-RUN dotnet publish -c Release -o /app
+
+# Build and publish (explicit path to csproj!)
+RUN dotnet publish src/ApiGateway/ApiGateway.csproj -c Release -o /app
 
 # Runtime stage
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
 COPY --from=build /app .
-EXPOSE 80
-ENTRYPOINT ["dotnet", "ApiGateway.dll"]≈
+# EXPOSE 80
+ENV ASPNETCORE_URLS=http://+:5100
+EXPOSE 5100
+
+# Copy wait-for-it script
+COPY wait-for-it.sh ./
+RUN chmod +x wait-for-it.sh
+
+# Use wait-for-it to wait for SQL before starting
+ENTRYPOINT ["./wait-for-it.sh", "postgres:5432", "--", "dotnet", "ApiGateway.dll"]

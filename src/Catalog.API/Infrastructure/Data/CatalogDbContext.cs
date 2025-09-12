@@ -41,9 +41,9 @@ namespace Catalog.API.Infrastructure.Data
                 entity.Property(c => c.Description).HasMaxLength(500);
                 entity.Property(c => c.ImageUrl).HasMaxLength(500);
                 entity.Property(c => c.CreatedAt)
-                  .HasDefaultValueSql("GETUTCDATE()");
+                  .HasDefaultValueSql("timezone('utc', now())");
                 entity.Property(c => c.UpdatedAt)
-                  .HasDefaultValueSql("GETUTCDATE()");
+                  .HasDefaultValueSql("timezone('utc', now())");
                 entity.HasOne(c => c.Parent)
                     .WithMany(c => c.Children)
                     .HasForeignKey(c => c.ParentId)
