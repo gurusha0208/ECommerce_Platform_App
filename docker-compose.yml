@@ -20,6 +20,24 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+  api-gateway:
+    build:
+      context: .   # folder where your gateway code lives
+      dockerfile: src/ApiGateway/Dockerfile     # yes, you need a Dockerfile for it
+    container_name: api-gateway
+    ports:
+      - "5100:5100"              # public entry port
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - CATALOG_API_URL=http://catalog-api:5001
+      - IDENTITY_API_URL=http://identity-api:5002
+      - BASKET_API_URL=http://basket-api:5003
+    depends_on:
+      - catalog-api
+      - identity-api
+      - basket-api
+    networks:
+      - ecommerce-net
 
   catalog-api:
     build:

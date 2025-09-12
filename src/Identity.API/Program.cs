@@ -61,6 +61,13 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+// Ensure database is created
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<IdentityDbContext>();
+    context.Database.EnsureCreated();
+}
+
 app.Run();
 
 

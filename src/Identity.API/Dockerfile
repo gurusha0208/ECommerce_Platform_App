@@ -19,7 +19,8 @@ RUN dotnet publish src/Identity.API/Identity.API.csproj -c Release -o /app
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
 COPY --from=build /app .
-EXPOSE 80
+EXPOSE 5002
+ENV ASPNETCORE_URLS=http://+:5002
 
 # Copy wait-for-it script
 COPY wait-for-it.sh ./
