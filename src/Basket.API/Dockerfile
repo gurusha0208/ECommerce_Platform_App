@@ -2,23 +2,30 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
-# Copy Basket.API and Common project files
-COPY Basket.API/Basket.API.csproj Basket.API/
-COPY Common/Common.csproj Common/
+# Copy project files
+COPY src/Basket.API/Basket.API.csproj src/Basket.API/
+COPY src/Common/Common.csproj src/Common/
 
 # Restore dependencies
-RUN dotnet restore Basket.API/Basket.API.csproj
+RUN dotnet restore src/Basket.API/Basket.API.csproj
 
 # Copy all source code
 COPY . .
 
 # Build and publish
-WORKDIR /src/Basket.API
-RUN dotnet publish -c Release -o /app
+RUN dotnet publish src/Basket.API/Basket.API.csproj -c Release -o /app
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
 COPY --from=build /app .
-EXPOSE 80
+
+ENV ASPNETCORE_URLS=http://+:5003
+EXPOSE 5003
+
+# Run the app
 ENTRYPOINT ["dotnet", "Basket.API.dll"]
+
+
+
+
