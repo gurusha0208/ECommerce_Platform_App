@@ -29,24 +29,26 @@
 
 
 
+# ===== Build Stage =====
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy project files
-COPY ["Catalog.API/Catalog.API.csproj", "Catalog.API/"]
-COPY ["../Common/Common.csproj", "Common/"]   # relative to Dockerfile
+# Copy project files relative to repo root
+COPY ["src/Catalog.API/Catalog.API.csproj", "Catalog.API/"]
+COPY ["src/Common/Common.csproj", "Common/"]
 
 # Restore dependencies
 RUN dotnet restore "Catalog.API/Catalog.API.csproj"
 
-# Copy everything
-COPY . .
+# Copy all source
+COPY src .
 
 WORKDIR "/src/Catalog.API"
 RUN dotnet publish "Catalog.API.csproj" -c Release -o /app/publish
 
+# ===== Runtime Stage =====
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["dotnet", "Catalog.API.dll"]
 
+ENTRYPOINT ["dotnet", "Catalog.API.dll"]
