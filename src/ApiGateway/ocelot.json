@@ -2,32 +2,40 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/api/products/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "catalog-api", "Port": 8080 }],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        { "Host": "ecommerce-platform-app.onrender.com", "Port": 8080 }
+      ],
       "UpstreamPathTemplate": "/api/products/{everything}",
       "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"],
       "SwaggerKey": "Catalog"
     },
     {
       "DownstreamPathTemplate": "/api/categories/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "catalog-api", "Port": 8080 }],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        { "Host": "ecommerce-platform-app.onrender.com", "Port": 8080 }
+      ],
       "UpstreamPathTemplate": "/api/categories/{everything}",
       "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"],
       "SwaggerKey": "Catalog"
     },
     {
       "DownstreamPathTemplate": "/api/auth/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "identity-api", "Port": 5002 }],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        { "Host": "ecommerce-platform-app-identity.onrender.com", "Port": 5002 }
+      ],
       "UpstreamPathTemplate": "/api/auth/{everything}",
       "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"],
       "SwaggerKey": "Identity"
     },
     {
       "DownstreamPathTemplate": "/api/basket/{everything}",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [{ "Host": "basket-api", "Port": 5003 }],
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        { "Host": "ecommerce-platform-app-basket.onrender.com", "Port": 5003 }
+      ],
       "UpstreamPathTemplate": "/api/basket/{everything}",
       "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"],
       "SwaggerKey": "Basket"
