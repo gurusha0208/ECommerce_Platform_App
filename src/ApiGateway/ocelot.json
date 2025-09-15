@@ -4,7 +4,7 @@
       "DownstreamPathTemplate": "/api/products/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
-        { "Host": "ecommerce-platform-app.onrender.com", "Port": 8080 }
+        { "Host": "ecommerce-platform-app.onrender.com", "Port": 443 }
       ],
       "UpstreamPathTemplate": "/api/products/{everything}",
       "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"],
@@ -14,7 +14,7 @@
       "DownstreamPathTemplate": "/api/categories/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
-        { "Host": "ecommerce-platform-app.onrender.com", "Port": 8080 }
+        { "Host": "ecommerce-platform-app.onrender.com", "Port": 443 }
       ],
       "UpstreamPathTemplate": "/api/categories/{everything}",
       "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"],
@@ -24,7 +24,7 @@
       "DownstreamPathTemplate": "/api/auth/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
-        { "Host": "ecommerce-platform-app-identity.onrender.com", "Port": 5002 }
+        { "Host": "ecommerce-platform-app-identity.onrender.com", "Port": 443 }
       ],
       "UpstreamPathTemplate": "/api/auth/{everything}",
       "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"],
@@ -34,7 +34,7 @@
       "DownstreamPathTemplate": "/api/basket/{everything}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
-        { "Host": "ecommerce-platform-app-basket.onrender.com", "Port": 5003 }
+        { "Host": "ecommerce-platform-app-basket.onrender.com", "Port": 443 }
       ],
       "UpstreamPathTemplate": "/api/basket/{everything}",
       "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"],
