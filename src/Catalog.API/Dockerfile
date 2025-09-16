@@ -13,7 +13,7 @@ RUN dotnet restore src/Catalog.API/Catalog.API.csproj
 COPY . .
 
 # Build and publish
-RUN dotnet publish src/Catalog.API/Catalog.API.csproj -c Release -o /app
+RUN dotnet publish src/Catalog.API/Catalog.API.csproj -c Release -o /app /p:UseAppHost=false
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
@@ -23,7 +23,10 @@ COPY --from=build /app .
 # # Set URL for ASP.NET - this is local development only
 # ENV ASPNETCORE_URLS=http://+:5001
 # EXPOSE 5001
-ENV ASPNETCORE_URLS=http://+:${PORT}
+# Let Render inject the runtime port
+ENV ASPNETCORE_URLS=http://+:$PORT
+
+EXPOSE 8080
 
 # Run the app
 ENTRYPOINT ["dotnet", "Catalog.API.dll"]

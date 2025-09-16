@@ -13,7 +13,7 @@ RUN dotnet restore src/Identity.API/Identity.API.csproj
 COPY . .
 
 # Build and publish (explicit path to csproj!)
-RUN dotnet publish src/Identity.API/Identity.API.csproj -c Release -o /app
+RUN dotnet publish src/Identity.API/Identity.API.csproj -c Release -o /app /p:UseAppHost=false
 
 # Runtime stage 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
@@ -22,7 +22,10 @@ COPY --from=build /app .
 # EXPOSE 5002 -this is local development only
 # ENV ASPNETCORE_URLS=http://+:5002
 
-ENV ASPNETCORE_URLS=http://+:${PORT}
+# Let Render inject the runtime port
+ENV ASPNETCORE_URLS=http://+:$PORT
+
+EXPOSE 8080
 
 # # Copy wait-for-it script - this is local development only
 # COPY wait-for-it.sh ./
