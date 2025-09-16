@@ -21,9 +21,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-app.Urls.Add("http://+:8080");
-app.Urls.Add("https://+:443");
+// ✅ Only bind to Render’s assigned PORT (via Dockerfile ENV)
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Urls.Add($"http://+:{port}");
 
+// ✅ Don't add https://+:443 (Render handles TLS externally)
+
+// Swagger only in Development
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerForOcelotUI(opt =>
@@ -32,7 +36,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+// ❌ Remove HTTPS redirection (causes crashes in Render)
 app.UseCors("AllowAll");
 
 app.UseAuthentication();

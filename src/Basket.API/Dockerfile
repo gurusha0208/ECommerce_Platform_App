@@ -13,7 +13,7 @@ RUN dotnet restore src/Basket.API/Basket.API.csproj
 COPY . .
 
 # Build and publish
-RUN dotnet publish src/Basket.API/Basket.API.csproj -c Release -o /app
+RUN dotnet publish src/Basket.API/Basket.API.csproj -c Release -o /app /p:UseAppHost=false
 
 # Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
@@ -22,7 +22,10 @@ COPY --from=build /app .
 
 # ENV ASPNETCORE_URLS=http://+:5003
 # EXPOSE 5003
-ENV ASPNETCORE_URLS=http://+:${PORT}
+# Let Render inject the runtime port
+ENV ASPNETCORE_URLS=http://+:$PORT
+
+EXPOSE 8080
 
 # Run the app
 ENTRYPOINT ["dotnet", "Basket.API.dll"]
