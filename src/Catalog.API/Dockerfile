@@ -23,6 +23,7 @@ COPY --from=build /app .
 # # Set URL for ASP.NET - this is local development only
 # ENV ASPNETCORE_URLS=http://+:5001
 # EXPOSE 5001
+ENV ASPNETCORE_URLS=http://+:${PORT}
 
 # Run the app
 ENTRYPOINT ["dotnet", "Catalog.API.dll"]

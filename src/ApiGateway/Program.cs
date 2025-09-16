@@ -21,6 +21,9 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.Urls.Add("http://+:8080");
+app.Urls.Add("https://+:443");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerForOcelotUI(opt =>

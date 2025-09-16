@@ -20,8 +20,9 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
 COPY --from=build /app .
 
-ENV ASPNETCORE_URLS=http://+:5003
-EXPOSE 5003
+# ENV ASPNETCORE_URLS=http://+:5003
+# EXPOSE 5003
+ENV ASPNETCORE_URLS=http://+:${PORT}
 
 # Run the app
 ENTRYPOINT ["dotnet", "Basket.API.dll"]
