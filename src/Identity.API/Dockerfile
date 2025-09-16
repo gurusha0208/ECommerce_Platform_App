@@ -22,6 +22,8 @@ COPY --from=build /app .
 # EXPOSE 5002 -this is local development only
 # ENV ASPNETCORE_URLS=http://+:5002
 
+ENV ASPNETCORE_URLS=http://+:${PORT}
+
 # # Copy wait-for-it script - this is local development only
 # COPY wait-for-it.sh ./
 # RUN chmod +x wait-for-it.sh

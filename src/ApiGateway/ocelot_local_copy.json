@@ -1,0 +1,59 @@
+{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/api/products/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "catalog-api", "Port": 5001 }],
+      "UpstreamPathTemplate": "/api/products/{everything}",
+      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"],
+      "SwaggerKey": "Catalog"
+    },
+    {
+      "DownstreamPathTemplate": "/api/categories/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "catalog-api", "Port": 5001 }],
+      "UpstreamPathTemplate": "/api/categories/{everything}",
+      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"],
+      "SwaggerKey": "Catalog"
+    },
+    {
+      "DownstreamPathTemplate": "/api/auth/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "identity-api", "Port": 5002 }],
+      "UpstreamPathTemplate": "/api/auth/{everything}",
+      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"],
+      "SwaggerKey": "Identity"
+    },
+    {
+      "DownstreamPathTemplate": "/api/basket/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "basket-api", "Port": 5003 }],
+      "UpstreamPathTemplate": "/api/basket/{everything}",
+      "UpstreamHttpMethod": ["GET", "POST", "PUT", "DELETE"],
+      "SwaggerKey": "Basket"
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://api-gateway:5100"
+  },
+  "SwaggerEndPoints": [
+    {
+      "Key": "Catalog",
+      "Config": [
+        { "Name": "Catalog API", "Version": "v1", "Url": "http://catalog-api:5001/swagger/v1/swagger.json" }
+      ]
+    },
+    {
+      "Key": "Identity",
+      "Config": [
+        { "Name": "Identity API", "Version": "v1", "Url": "http://identity-api:5002/swagger/v1/swagger.json" }
+      ]
+    },
+    {
+      "Key": "Basket",
+      "Config": [
+        { "Name": "Basket API", "Version": "v1", "Url": "http://basket-api:5003/swagger/v1/swagger.json" }
+      ]
+    }
+  ]
+}
